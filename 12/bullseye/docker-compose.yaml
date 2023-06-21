@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres:<custom_build>
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/data:/var/lib/postgresql/data
+      # ./datasql:/var/lib/postgresql/data
+    command:
+      [
+        "postgres",
+        "-cshared_preload_libraries=pglogical,pg_stat_statements",
+        "-cwal_level=logical"
+      ]
+    environment:
+      POSTGRES_USER: <user>
+      POSTGRES_PASSWORD: <password>
+      POSTGRES_DB: <db>
