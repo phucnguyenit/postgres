@@ -150,7 +150,7 @@ RUN set -ex; \
 			;; \
 	esac; \
 	\
-	apt-get install -y --no-install-recommends postgresql-common; \
+	apt-get install -y curl wget ca-certificates --no-install-recommends postgresql-common; \
 	sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf; \
 	apt-get install -y --no-install-recommends \
 		"postgresql-$PG_MAJOR=$PG_VERSION" \
@@ -183,6 +183,10 @@ ENV PGDATA /var/lib/postgresql/data
 # this 777 will be replaced by 700 at runtime (allows semi-arbitrary "--user" values)
 RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 777 "$PGDATA"
 VOLUME /var/lib/postgresql/data
+
+# install postgresql-13-pglogical
+RUN curl https://techsupport.enterprisedb.com/api/repository/dl/default/release/deb | bash
+RUN apt-get install -y postgresql-13-pglogical
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
