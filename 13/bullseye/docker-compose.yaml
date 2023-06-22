@@ -1,0 +1,18 @@
+version: '3'
+services:
+  postgresql:
+    image: postgres:<tag>
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/postgresql/data:/var/lib/postgresql/data
+    command:
+      [
+        "postgres",
+        "-cshared_preload_libraries=pglogical,pg_stat_statements",
+        "-cwal_level=logical"
+      ]
+    environment:
+      - POSTGRES_USER=<username>
+      - POSTGRES_PASSWORD=<pass>
+      - POSTGRES_DB=<db>
